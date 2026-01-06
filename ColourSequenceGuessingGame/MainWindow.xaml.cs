@@ -64,7 +64,6 @@ namespace ColourSequenceGuessingGame
         {
             InitializeComponent();
             GeneratePattern();
-            MatchCount = CalculateMatches();
             DataContext = this;
         }
 
@@ -214,6 +213,8 @@ namespace ColourSequenceGuessingGame
                 .Take(Colours.Count);
 
             _targetPattern.AddRange(shuffled);
+
+            MatchCount = CalculateMatches();
         }
 
         private int CalculateMatches()
@@ -234,6 +235,11 @@ namespace ColourSequenceGuessingGame
         protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void Restart_Click(object sender, RoutedEventArgs e)
+        {
+            GeneratePattern();
         }
     }    
 }
