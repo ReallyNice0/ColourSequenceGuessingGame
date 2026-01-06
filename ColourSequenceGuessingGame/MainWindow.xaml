@@ -15,7 +15,7 @@
         <ItemsControl Grid.Row="0" x:Name="ItemsControlColours" ItemsSource="{Binding Colours}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <UniformGrid Rows="1" Columns="5"/>
+                    <UniformGrid Rows="1"/>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
 

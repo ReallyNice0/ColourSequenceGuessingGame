@@ -27,7 +27,9 @@ namespace ColourSequenceGuessingGame
             Brushes.Green,
             Brushes.Blue,
             Brushes.Yellow,
-            Brushes.DarkViolet
+            Brushes.DarkViolet,
+            Brushes.Orange,
+            Brushes.Cyan
             };
 
         private readonly List<Brush> _targetPattern = new();
@@ -38,7 +40,9 @@ namespace ColourSequenceGuessingGame
             Brushes.Green,
             Brushes.Blue,
             Brushes.Yellow,
-            Brushes.DarkViolet
+            Brushes.DarkViolet,
+            Brushes.Orange,
+            Brushes.Cyan
         };
 
         private int _matchCount;
