@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,15 +17,9 @@ namespace ColourSequenceGuessingGame
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         private Point _dragStart;
-        public MainWindow()
-        {
-            InitializeComponent();
-            DataContext = this;
-        }
-
         public ObservableCollection<Brush> Colours { get; } =
             new ObservableCollection<Brush>
             {
@@ -34,6 +29,40 @@ namespace ColourSequenceGuessingGame
             Brushes.Yellow,
             Brushes.DarkViolet
             };
+
+        private readonly List<Brush> _targetPattern = new();
+
+        private static readonly Brush[] AvailableColours =
+        {
+            Brushes.Red,
+            Brushes.Green,
+            Brushes.Blue,
+            Brushes.Yellow,
+            Brushes.DarkViolet
+        };
+
+        private int _matchCount;
+
+        public int MatchCount
+        {
+            get => _matchCount;
+            set
+            {
+                if (_matchCount == value)
+                    return;
+
+                _matchCount = value;
+                OnPropertyChanged(nameof(MatchCount));
+            }
+        }
+
+        public MainWindow()
+        {
+            InitializeComponent();
+            GeneratePattern();
+            MatchCount = CalculateMatches();
+            DataContext = this;
+        }
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -124,6 +153,8 @@ namespace ColourSequenceGuessingGame
 
             await Fade(borderA, 0, 1);
             await Fade(borderB, 0, 1);
+
+            MatchCount = CalculateMatches();
         }
 
         private Task Fade(UIElement element, double from, double to)
@@ -166,6 +197,39 @@ namespace ColourSequenceGuessingGame
                     return result;
             }
             return null;
+        }
+
+        private void GeneratePattern()
+        {
+            var rnd = new Random();
+
+            _targetPattern.Clear();
+
+            var shuffled = AvailableColours
+                .OrderBy(_ => rnd.Next())
+                .Take(Colours.Count);
+
+            _targetPattern.AddRange(shuffled);
+        }
+
+        private int CalculateMatches()
+        {
+            int matches = 0;
+
+            for (int i = 0; i < Colours.Count; i++)
+            {
+                if (Colours[i] == _targetPattern[i])
+                    matches++;
+            }
+
+            return matches;
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }    
 }
